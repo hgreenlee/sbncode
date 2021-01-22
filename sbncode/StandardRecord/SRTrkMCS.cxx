@@ -29,7 +29,8 @@ namespace caf
     is_bwd_muon(false),
     is_bwd_pion(false),
     is_bwd_kaon(false),
-    is_bwd_proton(false)
+    is_bwd_proton(false),
+    scatterAngles({})
   {  }
 
   SRTrkMCS::~SRTrkMCS(){  }
@@ -52,6 +53,7 @@ namespace caf
     bwdP_err_pion    = -5.0;
     bwdP_err_kaon    = -5.0;
     bwdP_err_proton  = -5.0;
+    scatterAngles    = {};
   }
 
 } // end namespace caf

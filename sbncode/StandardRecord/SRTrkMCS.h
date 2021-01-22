@@ -4,6 +4,8 @@
 #ifndef SRTRKMCS_H
 #define SRTRKMCS_H
 
+#include <vector>
+
 namespace caf
 {
   /// Representation of the reco momentum and PID a recob::Track for 
@@ -39,6 +41,8 @@ namespace caf
       bool  is_bwd_pion; //!< MCS fit thinks the track is backwards for pion assumption
       bool  is_bwd_kaon; //!< MCS fit thinks the track is backwards for kaon assumption
       bool  is_bwd_proton; //!< MCS fit thinks the track is backwards for proton assumption
+
+      std::vector<float> scatterAngles; //!< Vector of angles between the segments used in the fit
 
       void setDefault();
     };

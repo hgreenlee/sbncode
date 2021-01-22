@@ -303,6 +303,8 @@ namespace caf
       srtrack.mcsP.fwdP_err_muon = mcs_fit_muon.fwdMomUncertainty();
       srtrack.mcsP.bwdP_muon     = mcs_fit_muon.bwdMomentum();
       srtrack.mcsP.bwdP_err_muon = mcs_fit_muon.bwdMomUncertainty();
+
+      srtrack.mcsP.scatterAngles = mcs_fit_muon.scatterAngles();
     }
 
     if (mcs_results[1].size()) {
