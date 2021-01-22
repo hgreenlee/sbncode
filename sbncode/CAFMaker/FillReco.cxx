@@ -395,17 +395,44 @@ namespace caf
         const std::vector<float> &dqdx = calo.dQdx();
         const std::vector<float> &dedx = calo.dEdx();
         const std::vector<float> &pitch = calo.TrkPitchVec();
+        const std::vector<float> &resRange = calo.ResidualRange();
         this_calo.charge = 0.;
         this_calo.ke = 0.;
         this_calo.nhit = 0;
+
+        std::vector<float> this_dEdxVec, this_ResRangeVec;
+
         for (unsigned i = 0; i < dedx.size(); i++) {
           if (dedx[i] > 1000.) continue;
           this_calo.nhit ++;
           this_calo.charge += dqdx[i] * pitch[i] / calo_constants[plane_id]; /* convert ADC*tick to electrons */
           this_calo.ke += dedx[i] * pitch[i];
+
+          if (resRange[i] > 10.f) continue;
+          this_dEdxVec.push_back(dedx[i]);
+          this_ResRangeVec.push_back(resRange[i]);
         }
+
+        // continue null value if not enough points to do fits
+        if(this_dEdxVec.size() < 10) continue;
+
+        // Try to do a pol0 fit
+        TGraph *gdedx = new TGraph(this_dEdxVec.size(), &this_ResRangeVec[0], &this_dEdxVec[0]);
+        try{ gdedx->Fit("pol0", "Q"); } catch(...){ continue; }
+        TF1* polfit = gdedx->GetFunction("pol0");
+        double polchi2 = polfit->GetChisquare();
+
+        // Try to do and exp fit
+        try{ gdedx->Fit("expo", "Q"); } catch(...){ continue; }
+        TF1* expfit = gdedx->GetFunction("expo");
+        double expchi2 = expfit->GetChisquare();
+
+        delete gdedx;
+        // Return the chi2 ratio
+        this_calo.stoppingChi2Ratio = polchi2/expchi2;
       }
     }
+
 
     // Set the plane with the most hits
     //
@@ -421,7 +448,6 @@ namespace caf
       bestplane = (caf::Plane_t)1;
     }
     srtrack.bestplane = bestplane;
-
   }
 
   // TODO: crt matching

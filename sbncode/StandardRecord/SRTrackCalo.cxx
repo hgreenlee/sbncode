@@ -14,7 +14,8 @@ namespace caf
   SRTrackCalo::SRTrackCalo():
     nhit(-999),
     ke(std::numeric_limits<float>::signaling_NaN()),
-    charge(std::numeric_limits<float>::signaling_NaN())
+    charge(std::numeric_limits<float>::signaling_NaN()),
+    stoppingChi2Ratio(std::numeric_limits<float>::signaling_NaN())
   {  }
 
   SRTrackCalo::~SRTrackCalo(){  }
@@ -24,6 +25,7 @@ namespace caf
     nhit          = -1;
     ke            = -1.;
     charge        = -1.;
+    stoppingChi2Ratio = -5.f;
   }
 
 } // end namespace caf
